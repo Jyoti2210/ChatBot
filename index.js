@@ -4,8 +4,9 @@ var dispatcher1 = require('httpdispatcher');
 var dispatcher = new dispatcher1();
 var MongoClient = require('mongodb').MongoClient;
 
-const port = process.env.PORT || 3000;
-const url = "mongodb://localhost:27017";
+const port = process.argv[2] || 3000;
+// const url = "mongodb://localhost:27017";
+const url = "mongodb://54.69.83.63:27017";
 const dbName = "SUShuttle";
 var runtime = require("./utils/runtime");
 
@@ -14,12 +15,17 @@ init();
 function init(){
 	console.log("starting on port:",port);
 	MongoClient.connect(url,function(err,client){
-		var obj = {
-			mongo:{
-				users: client.db(dbName).collection("users")
-			}
-		};
-		runtime.setRuntime("db",obj);
+		if (err) {
+			console.log("Connection to remote DB failed. Message: ", err);
+		} else {
+			console.log("Connected to Database");
+			var obj = {
+				mongo:{
+					WaitingTime: client.db(dbName).collection("WaitingTime")
+				}
+			};
+			runtime.setRuntime("db",obj);
+		}
 	});
 }
 
@@ -37,6 +43,6 @@ function handler(request,response){
 
 var server = http.createServer(handler);
 
-dispatcher.onGet("/apis/time", route.shuttleTime.time);
+dispatcher.onPost("/apis/time", route.shuttleTime.time);
 
 server.listen(port);
