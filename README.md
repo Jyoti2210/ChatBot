@@ -12,10 +12,10 @@ BACKGROUND:
 
 TECHNOLOGIES USED:
 
-Google's DialogFlow Engine,
+Google's DialogFlow Engine
 
-Node.js,
+Node.js
 
-MongoDB,
+MongoDB
 
 Amazon web services
